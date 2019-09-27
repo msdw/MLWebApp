@@ -34,6 +34,7 @@ def signup():
             last_name=form.last_name.data,
             phone=form.phone.data,
             email=form.email.data,
+            paid=False,
             confirmation=False,
             password=form.password.data,
         )

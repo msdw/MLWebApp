@@ -1,13 +1,25 @@
 from flask import render_template, jsonify
-from app import app
+from flask.ext.login import current_user
+from app import app, models
+from app.toolbox import email
 import random
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title='Home')
+    user = models.User.query.filter_by(email=current_user.email).first()
+    return render_template('index.html', title='Home', user=user)
 
+
+@app.route('/uploaded', methods = ['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+		f = request.files['file']
+		# model = get model here
+		img = image.load_img(f.filename)
+		preds = model.predict(img)
+		return render_template('uploaded.html', predictions=preds_decoded)
 
 @app.route('/map')
 def map():
