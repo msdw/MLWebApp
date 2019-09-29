@@ -173,7 +173,7 @@ def pay():
 @login_required
 def charge():
     # Amount in cents
-    amount = 500
+    amount = 5000
     customer = stripe.Customer.create(email=current_user.email, source=request.form['stripeToken'])
     charge = stripe.Charge.create(
         customer=customer.id,
