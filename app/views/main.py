@@ -16,10 +16,16 @@ webhook_secret = 'whsec_yFMTEi8c36tEIRXcm8XOjMHDvR93fBhe'
 @app.route('/index')
 def index():
   user = None
+  client_secret = ''
   if current_user.is_authenticated:
     user = models.User.query.filter_by(email=current_user.email).first()
-  return render_template('index.html', title='Home', user=user)
-
+    if user.paid == 0:
+      intent = stripe.PaymentIntent.create(
+        amount=5000,
+        currency='eur',
+      )
+      client_secret = intent.client_secret
+  return render_template('index.html', title='Home', user=user, client_secret=client_secret)
 
 @app.route('/uploaded', methods = ['GET', 'POST'])
 def upload_file():
