@@ -97,9 +97,7 @@ def settings():
 # -------- Charge ---------------------------------------------------------- #
 @app.route('/charge', methods=['POST'])
 def charge():
-    print('----------BEFPRE LOG -----------------')
     if session.get('logged_in'):
-        print('----------IN LOG -----------------')
         user = helpers.get_user()
         try:
             amount = 1000   # amount in cents
