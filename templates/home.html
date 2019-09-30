@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar.html" %}
+<section class="hero is-primary is-bold is-large">
+  <div class="hero-body" style="padding-top: 20px">
+
+   <div style="float: right;">
+     <h2>Monthly service for €10.00</h2>
+  	{% if not user.active %}
+      <form action="/charge" method="post">
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ user.key }}"
+          data-description="Discount Optimiser Monthly Charge" data-amount="1000" data-locale="auto">
+          </script>
+      </form>
+     {% endif %}
+     {% if user.active %}
+      <div><span>already done</span></div>
+     {% endif %}
+    </div>
+    
+    <div>
+	{% if user.active %}
+      <!-- upload file -->
+    {% endif %}
+
+	{% if not user.active %}
+      <div><span>Activate subscription with payment</span></div>
+    {% endif %}
+    </div>
+
+    <div class="loader" style="display:none;"></div>
+    <h1 id="result">
+      <span> </span>
+    </h1>
+    
+
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="../static/js/scripts.js"></script>
+{% endblock %}
