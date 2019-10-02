@@ -25,6 +25,7 @@
 - Easily customizable
 
 ## Setup
+Requires Python3!
 ``` 
 git clone https://github.com/anfederico/Flaskex
 cd Flaskex

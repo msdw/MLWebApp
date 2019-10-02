@@ -3,11 +3,18 @@
 from scripts import tabledef
 from scripts import forms
 from scripts import helpers
+import keras
+import tensorflow as tf
+from keras.models import load_model
 from flask import Flask, redirect, url_for, render_template, request, session
 import json
 import sys
-import os
 import stripe
+import os
+from keras.preprocessing import image
+import fastai
+from werkzeug.utils import secure_filename
+from fastai.vision import *
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)  # Generic key for dev purposes only
@@ -116,6 +123,73 @@ def charge():
             return render_template('home.html', user=user)
         except stripe.error.StripeError:
             return render_template('error.html')
+
+# -------- Model ---------------------------------------------------------- #
+
+@app.route('/predict', methods = ['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.join(
+            basepath, 'uploads', secure_filename(f.filename))
+        f.save(file_path)
+        img = open_image(file_path)
+
+        learn = load_learner('models')
+
+        pred,idx,outputs = learn.predict(img)
+        print('Predicted class: ', pred)
+
+        if int(pred.__str__()) == 1:
+            return "Palm oil plantation: YES"
+        elif int(pred.__str__()) == 0:
+            return "Palm oil plantation: NO"
+
+
+
+# MODEL_PATH = 'models/image_classifier.h5'
+
+# model = load_model(MODEL_PATH)
+# model._make_predict_function()
+
+# def init():
+#     global model
+#     model = load_model('image_classifier.h5')
+# global graph
+# graph = tf.get_default_graph()
+#     #return graph
+
+
+# def model_predict(img_path, model):
+#     img = image.load_img(img_path, target_size=(224, 224))
+
+#     x = image.img_to_array(img)
+#     x = np.expand_dims(x, axis=0)
+
+#     x = preprocess_input(x)
+
+#     preds = model.predict(x)
+#     return preds
+
+# @app.route('/predict', methods = ['GET', 'POST'])
+# def upload_file():
+#     print(df)
+#     if request.method == 'POST':
+#         f = request.files['file']
+#         basepath = os.path.dirname(__file__)
+#         file_path = os.path.join(
+#             basepath, 'uploads', secure_filename(f.filename))
+#         f.save(file_path)
+
+#         with graph.as_default():
+#             preds = model_predict(file_path, model)
+
+#             pred_class = preds.argmax(axis=-1)
+#             result = str(pred_class[0])
+#             return result
+
+#     return None
 
 # ======== Main ============================================================== #
 if __name__ == "__main__":

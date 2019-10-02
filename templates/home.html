@@ -20,12 +20,23 @@
     
     <div>
 	{% if user.active %}
-      <!-- upload file -->
-    {% endif %}
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+        <label for="imageUpload" class="upload-label">
+          Choose...
+        </label>
+        <input type="file" name="file" id="imageUpload">
+      </form>
+  {% endif %}
 
 	{% if not user.active %}
       <div><span>Activate subscription with payment</span></div>
-    {% endif %}
+  {% endif %}
+   <div class="image-section" style="display:none;">
+      <div>
+        <button type="button" class="upload-label" id="btn-predict">Detect palm oil plantation</button>
+      </div>
+    </div>
+
     </div>
 
     <div class="loader" style="display:none;"></div>
